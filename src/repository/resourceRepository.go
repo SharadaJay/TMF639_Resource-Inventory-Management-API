@@ -8,6 +8,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,6 +24,8 @@ func getDB() *mongo.Database {
 }
 
 func ListResources(filterMap bson.M, findOptions *options.FindOptions) ([]models.Resource, error) {
+	log.Debug("ListResource repository started")
+
 	database := getDB()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -31,17 +34,25 @@ func ListResources(filterMap bson.M, findOptions *options.FindOptions) ([]models
 	if err != nil {
 		return nil, fmt.Errorf("error fetching resources from database: %v", err)
 	}
-	defer cursor.Close(ctx)
+	defer func(cursor *mongo.Cursor, ctx context.Context) {
+		err := cursor.Close(ctx)
+		if err != nil {
+
+		}
+	}(cursor, ctx)
 
 	var resources []models.Resource
 	if err = cursor.All(ctx, &resources); err != nil {
 		return nil, fmt.Errorf("error reading resources from cursor: %v", err)
 	}
 
+	log.Debug("ListResource repository completed")
 	return resources, nil
 }
 
 func CreateResource(resource models.Resource) (models.Resource, error) {
+	log.Debug("CreateResource repository started")
+
 	database := getDB()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -52,10 +63,14 @@ func CreateResource(resource models.Resource) (models.Resource, error) {
 	}
 
 	resource.Id = res.InsertedID.(string)
+
+	log.Debug("CreateResource repository completed")
 	return resource, nil
 }
 
 func RetrieveResource(id string) (models.Resource, error) {
+	log.Debug("RetrieveResource repository started")
+
 	database := getDB()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -66,10 +81,14 @@ func RetrieveResource(id string) (models.Resource, error) {
 	if err != nil {
 		return models.Resource{}, err
 	}
+
+	log.Debug("RetrieveResource repository completed")
 	return resource, nil
 }
 
 func PatchResource(id string, update models.Resource) (models.Resource, error) {
+	log.Debug("PatchResource repository started")
+
 	database := getDB()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -83,15 +102,21 @@ func PatchResource(id string, update models.Resource) (models.Resource, error) {
 	if err != nil {
 		return models.Resource{}, err
 	}
+
+	log.Debug("PatchResource repository completed")
 	return updatedResource, nil
 }
 
 func DeleteResource(id string) error {
+	log.Debug("DeleteResource repository started")
+
 	database := getDB()
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	filter := bson.M{"id": id}
 	_, err := database.Collection(ResourceCollection).DeleteOne(ctx, filter)
+
+	log.Debug("DeleteResource repository completed")
 	return err
 }

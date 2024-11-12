@@ -7,6 +7,7 @@ package services
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"resource-inventory/src/models"
@@ -16,6 +17,8 @@ import (
 )
 
 func ListResources(fields, limit, offset, filterByValString string) ([]models.Resource, error) {
+	log.Debug("ListResource service started")
+
 	filterMap, err := prepareFilterMap(filterByValString)
 	if err != nil {
 		return nil, err
@@ -31,6 +34,7 @@ func ListResources(fields, limit, offset, filterByValString string) ([]models.Re
 		return nil, fmt.Errorf("error fetching resources: %v", err)
 	}
 
+	log.Debug("ListResource service completed")
 	return resources, nil
 }
 
