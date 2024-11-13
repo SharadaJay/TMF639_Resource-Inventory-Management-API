@@ -1,7 +1,6 @@
 # TMF639_Resource-Inventory-Management-API
-Implementation of TM Forum Open APIs (Apache 2.0) Resource Inventory Management API (TMF639) with Go (Golang) & Gin Web Framework
+Implementation of TM Forum Open APIs (Apache 2.0) Resource Inventory Management API (TMF639) with Go (Golang) & Gin Web Framework. <br><br>
 
-<br>
 To run the application locally;
 
 * Install dependencies
@@ -16,7 +15,7 @@ To run the application locally;
    ```
     
 <br>
-To create a docker image;
+To create a docker image;<br><br>
 
 * Run docker build
     ```bash
