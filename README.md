@@ -14,6 +14,7 @@ To run the application locally;
     ```bash
         go run main.go
    ```
+    
 <br>
 To create a docker image;
 
