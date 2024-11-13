@@ -21,5 +21,6 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 COPY --from=build /go-app /app/go-app
+COPY --from=build /app/.env /app
 
 ENTRYPOINT [ "./go-app" ]
