@@ -15,9 +15,9 @@ To run the application locally;
    ```
     
 <br>
-To create a docker image;<br><br>
+To create a docker image;<br>
 
-* Run docker build
+* Run docker build<br><br>
     ```bash
         docker build -t resource-inventory-image .
     ```
