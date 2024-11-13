@@ -57,12 +57,10 @@ func CreateResource(resource models.Resource) (models.Resource, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	res, err := database.Collection(ResourceCollection).InsertOne(ctx, resource)
+	_, err := database.Collection(ResourceCollection).InsertOne(ctx, resource)
 	if err != nil {
 		return models.Resource{}, err
 	}
-
-	resource.Id = res.InsertedID.(string)
 
 	log.Debug("CreateResource repository completed")
 	return resource, nil
